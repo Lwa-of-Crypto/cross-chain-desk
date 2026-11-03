@@ -64,6 +64,23 @@ const waitTerms = page => page.waitForFunction(() => /Who controls|You receive/.
 async function run(eng, bt, device) {
   console.log(`\n[${eng}: ${device} on ${bt.name()}]`)
 
+  // ── K0 a chain picked on its own starts on its main coin, not the first token in the list
+  {
+    const { browser, page, errors } = await session(bt, device)
+    const tok = () => page.evaluate(() => document.getElementById('xc-to-token').selectedOptions[0]?.textContent)
+    const fromTok = () => page.evaluate(() => document.getElementById('xc-from-token').selectedOptions[0]?.textContent)
+    await page.selectOption('#xc-to-chain', 'near'); await page.dispatchEvent('#xc-to-chain', 'change')
+    t(eng, 'receiving on NEAR starts on wNEAR (was the first token, "ABG")', await tok() === 'wNEAR', await tok())
+    await page.selectOption('#xc-to-chain', 'base'); await page.dispatchEvent('#xc-to-chain', 'change')
+    t(eng, '…on Base it starts on ETH', await tok() === 'ETH', await tok())
+    await page.selectOption('#xc-to-chain', 'sol'); await page.dispatchEvent('#xc-to-chain', 'change')
+    t(eng, '…on Solana it starts on SOL', await tok() === 'SOL', await tok())
+    await page.selectOption('#xc-from-chain', 'arb'); await page.dispatchEvent('#xc-from-chain', 'change')
+    t(eng, 'a token the new chain also lists is kept (USDC on Base → USDC on Arbitrum)', await fromTok() === 'USDC', await fromTok())
+    t(eng, 'no page errors', errors.length === 0, errors.join(' | '))
+    await browser.close()
+  }
+
   // ── K1 end to end: a real account's real key, from mainnet, through the desk
   {
     const { browser, page, errors } = await session(bt, device)

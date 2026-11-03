@@ -166,12 +166,20 @@
     });
     if (keep) sel.value = keep;
   }
+  // A chain picked without a matching token starts on its main coin, not the first one in the list
+  // (the list is alphabetical: NEAR opened on "ABG", Base on "BRETT", Solana on "$WIF").
+  var MAIN_COIN = { eth: 'ETH', base: 'ETH', arb: 'ETH', op: 'ETH', bsc: 'BNB', pol: 'POL', avax: 'AVAX', gnosis: 'xDAI',
+    btc: 'BTC', ltc: 'LTC', doge: 'DOGE', tron: 'TRX', sol: 'SOL', near: 'wNEAR' };
   function fillTokens(sel, chain, keepSymbol) {
     clear(sel);
     S.tokens.filter(function (t) { return t.chain === chain && !t.paused; }).forEach(function (t) {
       var o = h('option', null, t.symbol); o.value = t.id; sel.appendChild(o);
     });
-    if (keepSymbol) for (var i = 0; i < sel.options.length; i++) if (sel.options[i].textContent === keepSymbol) { sel.selectedIndex = i; break; }
+    [keepSymbol, MAIN_COIN[chain]].some(function (want) {
+      if (!want) return false;
+      for (var i = 0; i < sel.options.length; i++) if (sel.options[i].textContent === want) { sel.selectedIndex = i; return true; }
+      return false;
+    });
   }
   // Addresses are NOT remembered (red-team round 2): a stored address can be
   // planted by any script that ever runs on the origin and then pre-filled as
