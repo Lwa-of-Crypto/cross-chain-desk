@@ -1,0 +1,15 @@
+baseline: all 8 suites pass on unmodified copies served through the hook
+
+  killed   HOOK SANITY — client throws on load  (mobile7)
+  killed   proof: a proof for another swap is shown  (mobile7)
+  killed   proof: the proof's own explorer link is used  (mobile7)
+  killed   proof: check text rendered as HTML  (mobile7)
+  killed   proof: fetched without the swap key  (mobile7)
+  killed   proof: a late answer lands after the card changed  (mobile2)
+  killed   proof: box shown before the swap is settled  (mobile7)
+  SURVIVED proof: "Check signature" treats any answer as valid
+  killed   proof: long receipt overflows the phone width  (mobile7)
+
+8/9 client mutants killed
+  ! proof: "Check signature" treats any answer as valid — SURVIVED
+exit=1

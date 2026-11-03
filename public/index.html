@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#1A0F08"/>
+<meta name="color-scheme" content="dark"/>
+<title>Cross-Chain Desk · CryptoLwa × NEAR Intents</title>
+<meta name="description" content="Swap between Bitcoin, Solana, NEAR, Tron, Dogecoin, Litecoin and 8 EVM chains from any wallet. Non-custodial, routed by NEAR Intents 1Click, with every quote checked against an independent price and every payout checked on-chain."/>
+<link rel="icon" href="/logo.svg" type="image/svg+xml"/>
+<link rel="preload" href="/fonts/cinzel-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin/>
+<link rel="stylesheet" href="/desk.css?v=5"/>
+</head>
+<body>
+<div class="top-bar">
+<header class="top">
+  <div class="brand">
+    <img src="/logo.svg" alt="" width="40" height="40"/>
+    <div class="name">CRYPTOLWA <span>CROSS-CHAIN DESK</span></div>
+  </div>
+  <span class="xc-pill" id="xc-status-pill" aria-live="polite">LOADING</span>
+</header>
+</div>
+
+<section class="hero" aria-label="About this desk">
+  <div class="eyebrow">CryptoLwa · NEAR Intents · 14 chains</div>
+  <h1>Swap any chain. <span class="g">Verify</span> every <span class="c">payout</span>.</h1>
+  <p class="tag">Any wallet, no approvals, no account. Routed by <a href="https://docs.near-intents.org/" target="_blank" rel="noopener noreferrer nofollow">NEAR&nbsp;Intents</a>; checked by this desk on the destination chain before it says "done".</p>
+  <div class="rule" aria-hidden="true"><i></i></div>
+  <p class="xc-about" id="xc-about"><strong>Built for the NEAR Protocol hackathon.</strong> This swap desk is isolated from everything
+    else on CryptoLwa: its own server, its own database and its own keys, with no link to member accounts. It is free,
+    needs no account and is not behind the membership paywall.</p>
+</section>
+
+<main class="xc-wrap" id="xc-desk" aria-label="Cross-chain swap">
+  <div class="panel">
+    <div class="xc-body">
+      <div>
+        <div id="xc-form">
+          <div class="xc-connect" id="xc-connect" aria-live="polite"></div>
+          <div class="xc-grid">
+            <div class="xc-side">
+              <div class="lbl">YOU SEND</div>
+              <div class="two">
+                <select id="xc-from-chain" aria-label="Send from chain"></select>
+                <select id="xc-from-token" aria-label="Send token"></select>
+              </div>
+              <input id="xc-amount" class="xc-amount-in" inputmode="decimal" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Amount" aria-label="Amount to send"/>
+            </div>
+            <button type="button" class="xc-dir" id="xc-swap-dir" aria-label="Swap direction">⇄</button>
+            <div class="xc-side">
+              <div class="lbl">YOU RECEIVE</div>
+              <div class="two">
+                <select id="xc-to-chain" aria-label="Receive on chain"></select>
+                <select id="xc-to-token" aria-label="Receive token"></select>
+              </div>
+              <select id="xc-slippage" class="xc-amount-in" aria-label="Slippage tolerance"></select>
+            </div>
+          </div>
+          <div class="xc-field">
+            <label for="xc-recipient" id="xc-recipient-label">Your receiving address</label>
+            <input id="xc-recipient" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="paste your address"/>
+          </div>
+          <div class="xc-field">
+            <label for="xc-refund" id="xc-refund-label">Your refund address</label>
+            <input id="xc-refund" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="paste your address on the sending chain"/>
+          </div>
+          <div id="xc-limits"></div>
+        </div>
+        <div id="xc-msg" class="xc-msg" aria-live="polite"></div>
+        <div id="xc-preview" aria-live="polite"></div>
+        <div class="xc-confirm" id="xc-confirm" hidden>
+          <label><input type="checkbox" id="xc-ack-amount"/><span></span></label>
+          <label><input type="checkbox" id="xc-ack-address"/><span></span></label>
+          <div><button type="button" class="xc-btn" id="xc-go" disabled>Get my deposit address</button></div>
+        </div>
+        <div id="xc-card" hidden aria-live="polite"></div>
+      </div>
+      <div class="xc-hist-wrap">
+        <h4><span>MY SWAPS ON THIS DEVICE</span><button type="button" id="xc-history-refresh">refresh</button></h4>
+        <ul id="xc-history"><li class="muted">Loading…</li></ul>
+        <p class="hist-note">No account: each swap's access key is kept in this browser only. Keep the receipt — it is your record if you clear this browser.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="panel checks" aria-labelledby="checks-h">
+    <h2 id="checks-h">What this desk <span class="g">checks</span> before it hands you an address</h2>
+    <p class="lede">NEAR Intents 1Click does the routing. This desk treats every answer from it, and from every price feed and node, as untrusted until checked.</p>
+    <ul>
+      <li><b>Your addresses are real and spendable.</b> Checksums on every chain (EIP-55, bech32/bech32m, base58check). Burn addresses, token contracts, Solana token accounts and programs, missing NEAR accounts, and anyone-can-spend Bitcoin outputs are refused.</li>
+      <li><b>The router quoted what you asked for.</b> Its answer must echo your assets, amount, recipient and refund address exactly, carry no memo, and keep the deposit address alive long enough to pay.</li>
+      <li><b>The price is fair.</b> Cost is measured against an independent market price (CoinGecko, DeFiLlama as fallback), never the router's own. An outlier in either direction is blocked.</li>
+      <li><b>The deal you accepted is the deal you get.</b> A real quote more than 0.25% worse than the preview needs a fresh yes.</li>
+      <li><b>One press, one swap.</b> Each request is reserved in the ledger before the router is called, so a double tap, a retry or a dropped connection returns the same swap, never a second address.</li>
+      <li><b>"Delivered" is checked, not believed.</b> A payout is confirmed on the destination chain (EVM receipts and transfer logs, Solana balances, Bitcoin outputs, NEAR payout receipts), must be newer than the swap, and can settle one swap only. A contradiction pauses the route automatically.</li>
+      <li><b>Paying from a connected wallet sends exactly the card.</b> On the 8 EVM chains your browser wallet can send the deposit for you: one plain transfer of the exact amount, to the deposit address, on the swap's chain, built from what was fixed when the address was issued. Never an approval or a signature. The wallet is switched to the right chain first, and once a swap is paid this way, that browser does not offer to pay it again.</li>
+      <li><b>You get a proof you can check.</b> Every settled swap has a signed proof of delivery: what was checked, for whom, how much, and the payout transaction. Anyone can check the signature, and the explorer link shows the payout without trusting this desk.</li>
+    </ul>
+  </section>
+
+  <div class="xc-legal">
+    <div><b>How it works:</b> you get a one-time deposit address from the NEAR Intents 1Click service. Send the exact amount from any wallet, or let a connected browser wallet send it on the EVM chains; market makers fill the swap and pay your receiving address. If it cannot be filled at or above the guaranteed minimum, the deposit is refunded to your refund address.</div>
+    <div><b>Custody:</b> this desk never holds, signs or moves your funds and never sees your keys. It has no wallet and no treasury. When you pay from a connected wallet, your wallet signs, after you approve it there.</div>
+    <div><b>Costs:</b> every quote shows its full cost against the market price, including 1Click's fee. This desk adds no fee unless shown.</div>
+    <div class="support"><b>Support:</b> <a href="mailto:support@cryptolwa.io">support@cryptolwa.io</a>. Include your swap id and receipt. We never ask for your keys, seed phrase or a payment.</div>
+    <div class="warn"><b>Irreversible:</b> sending the wrong coin, on the wrong network, or to an address that needs a memo or tag can lose the funds. Not affiliated with the NEAR Foundation or the NEAR Intents team. Not financial advice.</div>
+  </div>
+</main>
+
+<script src="/vendor/qrcode.min.js"></script>
+<script src="/desk.js?v=5"></script>
+</body>
+</html>

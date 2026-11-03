@@ -1,0 +1,55 @@
+// One Worker: page + API + reconciler. Nothing here is shared with any other project.
+// Before the first deploy (see README):
+//   npx wrangler d1 create near-intents-desk      → paste the id below
+//   npx wrangler secret put DESK_SECRET            → 32+ random characters
+//   npx wrangler secret put ADMIN_TOKEN            → optional; without it the admin API does not exist
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "near-intents-desk",
+  "main": "src/worker.ts",
+  // Required by Cloudflare. Pinned: every suite and mutation campaign ran against this value (local workerd
+  // must accept it; wrangler's own workerd sets the newest it can). Changing it changes runtime behaviour.
+  "compatibility_date": "2026-07-28",
+  // One public address on the owner's own domain. A brand-new *.workers.dev address with
+  // "near-intents" in it was flagged by MetaMask as possible phishing (measured); its public
+  // blocklist holds 9 fake "near-intents" sites and 690 workers.dev ones. Per-version preview URLs
+  // would be extra copies of the desk nobody needs.
+  "routes": [{ "pattern": "desk.cryptolwa.io", "custom_domain": true }],
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // every request goes through the Worker, so the page gets its security headers from code we test
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    { "binding": "DESK_DB", "database_name": "near-intents-desk", "database_id": "2d568332-b2c9-4f45-b82b-eecbdf4214e0" }
+  ],
+  // Every budget: per client / per network / desk-wide (src/api/common.ts BUDGETS; the
+  // limits must be equal — test/intents-redteam9.mjs R13 fails if they drift apart).
+  // They store nothing, so they cost no D1 writes. namespace_id must be unused by any
+  // other Worker on the account (a shared id shares counters).
+  "ratelimits": [
+    { "name": "RL_API", "namespace_id": "73010", "simple": { "limit": 300,  "period": 60 } },
+    { "name": "RL_Q",   "namespace_id": "73011", "simple": { "limit": 40,   "period": 60 } },
+    { "name": "RL_QN",  "namespace_id": "73012", "simple": { "limit": 120,  "period": 60 } },
+    { "name": "RL_QA",  "namespace_id": "73018", "simple": { "limit": 1200, "period": 60 } },
+    { "name": "RL_A",   "namespace_id": "73013", "simple": { "limit": 6,    "period": 60 } },
+    { "name": "RL_AN",  "namespace_id": "73014", "simple": { "limit": 12,   "period": 60 } },
+    { "name": "RL_AA",  "namespace_id": "73019", "simple": { "limit": 180,  "period": 60 } },
+    { "name": "RL_S",   "namespace_id": "73015", "simple": { "limit": 12,   "period": 60 } },
+    { "name": "RL_SN",  "namespace_id": "73020", "simple": { "limit": 12,   "period": 60 } },
+    { "name": "RL_SA",  "namespace_id": "73021", "simple": { "limit": 1200, "period": 60 } },
+    { "name": "RL_L",   "namespace_id": "73016", "simple": { "limit": 30,   "period": 60 } },
+    { "name": "RL_LN",  "namespace_id": "73022", "simple": { "limit": 90,   "period": 60 } },
+    { "name": "RL_T",   "namespace_id": "73017", "simple": { "limit": 6,    "period": 60 } },
+    { "name": "RL_TN",  "namespace_id": "73023", "simple": { "limit": 6,    "period": 60 } },
+    { "name": "RL_TA",  "namespace_id": "73024", "simple": { "limit": 240,  "period": 60 } }
+  ],
+  // the reconciler: every unfinished swap is re-checked against 1Click and the destination chain.
+  // Every minute (round 13): on the Free plan's 50-subrequest cap a pass covers up to ~11 idle swaps.
+  "triggers": { "crons": ["* * * * *"] },
+  "vars": { "INTENTS_ENABLED": "1" },
+  "observability": { "enabled": true }
+}

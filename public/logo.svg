@@ -1,0 +1,174 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 500 500" xml:space="preserve">
+
+  <defs>
+    <!-- Deep navy background gradient -->
+    <radialGradient id="bg" cx="50%" cy="44%" r="62%">
+      <stop offset="0%"   stop-color="#1C1840"/>
+      <stop offset="100%" stop-color="#080614"/>
+    </radialGradient>
+
+    <!-- Eye fill -->
+    <radialGradient id="eyeFill" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#1A1238"/>
+      <stop offset="100%" stop-color="#0A0818"/>
+    </radialGradient>
+
+    <!-- Gold glow filter -->
+    <filter id="gGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Purple glow filter -->
+    <filter id="pGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Subtle text glow -->
+    <filter id="tGlow">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#C9A84C" flood-opacity="0.5"/>
+    </filter>
+    <filter id="tGlowPurple">
+      <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#CC55FF" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- ─── BACKGROUND ─── -->
+  <rect width="500" height="500" fill="url(#bg)" rx="0"/>
+
+  <!-- ─── OUTER CIRCLE ─── -->
+  <!-- Soft halo ring -->
+  <circle cx="250" cy="228" r="164" fill="none"
+    stroke="#C9A84C" stroke-width="0.8" opacity="0.25"/>
+  <!-- Main circle -->
+  <circle cx="250" cy="228" r="160" fill="none"
+    stroke="#C9A84C" stroke-width="2" opacity="0.9"
+    filter="url(#gGlow)"/>
+  <!-- Thin inner ring -->
+  <circle cx="250" cy="228" r="155" fill="none"
+    stroke="#C9A84C" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- ─── EIGHT-POINTED STAR LINES ─── -->
+  <!-- These are the 4 lines (vertical, horizontal, two diagonals)
+       clipped to the outer circle area -->
+  <!-- Vertical -->
+  <line x1="250" y1="68"  x2="250" y2="388"
+    stroke="#C9A84C" stroke-width="1.6" opacity="0.75" filter="url(#gGlow)"/>
+  <!-- Horizontal -->
+  <line x1="90"  y1="228" x2="410" y2="228"
+    stroke="#C9A84C" stroke-width="1.6" opacity="0.75" filter="url(#gGlow)"/>
+  <!-- Diagonal ↗↙ -->
+  <line x1="136" y1="114" x2="364" y2="342"
+    stroke="#C9A84C" stroke-width="1.6" opacity="0.75" filter="url(#gGlow)"/>
+  <!-- Diagonal ↖↘ -->
+  <line x1="364" y1="114" x2="136" y2="342"
+    stroke="#C9A84C" stroke-width="1.6" opacity="0.75" filter="url(#gGlow)"/>
+
+  <!-- ─── PURPLE OUTER DIAMOND ─── -->
+  <!-- Glow layer -->
+  <polygon points="250,75 405,228 250,381 95,228"
+    fill="none" stroke="#AA33EE" stroke-width="4" opacity="0.2"
+    filter="url(#pGlow)"/>
+  <!-- Main line -->
+  <polygon points="250,75 405,228 250,381 95,228"
+    fill="none" stroke="#CC55FF" stroke-width="2.2" opacity="0.95"
+    filter="url(#pGlow)"/>
+
+  <!-- Corner dots on purple diamond -->
+  <!-- Top point -->
+  <circle cx="250" cy="75"  r="4.5" fill="#CC55FF" opacity="0.95"/>
+  <circle cx="250" cy="75"  r="8"   fill="none" stroke="#CC55FF" stroke-width="1" opacity="0.35"/>
+  <!-- Right point -->
+  <circle cx="405" cy="228" r="4.5" fill="#CC55FF" opacity="0.95"/>
+  <circle cx="405" cy="228" r="8"   fill="none" stroke="#CC55FF" stroke-width="1" opacity="0.35"/>
+  <!-- Bottom point -->
+  <circle cx="250" cy="381" r="4.5" fill="#CC55FF" opacity="0.95"/>
+  <circle cx="250" cy="381" r="8"   fill="none" stroke="#CC55FF" stroke-width="1" opacity="0.35"/>
+  <!-- Left point -->
+  <circle cx="95"  cy="228" r="4.5" fill="#CC55FF" opacity="0.95"/>
+  <circle cx="95"  cy="228" r="8"   fill="none" stroke="#CC55FF" stroke-width="1" opacity="0.35"/>
+
+  <!-- Tiny floating accent dots beside outer circle (left & right) -->
+  <circle cx="81"  cy="212" r="3.5" fill="#CC55FF" opacity="0.75"/>
+  <circle cx="419" cy="212" r="3.5" fill="#CC55FF" opacity="0.75"/>
+
+  <!-- ─── GOLD INNER DIAMOND ─── -->
+  <!-- Glow layer -->
+  <polygon points="250,112 368,228 250,344 132,228"
+    fill="none" stroke="#C9A84C" stroke-width="4" opacity="0.2"
+    filter="url(#gGlow)"/>
+  <!-- Main line -->
+  <polygon points="250,112 368,228 250,344 132,228"
+    fill="none" stroke="#C9A84C" stroke-width="2.5" opacity="0.98"
+    filter="url(#gGlow)"/>
+
+  <!-- Small dots at intersection of inner diamond & X lines -->
+  <!-- Upper right -->
+  <circle cx="332" cy="159" r="3.2" fill="#C9A84C" opacity="0.8"/>
+  <!-- Upper left -->
+  <circle cx="168" cy="159" r="3.2" fill="#C9A84C" opacity="0.8"/>
+  <!-- Lower right -->
+  <circle cx="332" cy="297" r="3.2" fill="#C9A84C" opacity="0.8"/>
+  <!-- Lower left -->
+  <circle cx="168" cy="297" r="3.2" fill="#C9A84C" opacity="0.8"/>
+
+  <!-- ─── CENTER EYE ─── -->
+  <!-- Outer ring of center medallion -->
+  <circle cx="250" cy="228" r="40" fill="url(#eyeFill)"
+    stroke="#C9A84C" stroke-width="2.5" filter="url(#gGlow)"/>
+  <!-- Second inner ring -->
+  <circle cx="250" cy="228" r="31" fill="none"
+    stroke="#C9A84C" stroke-width="1.2" opacity="0.55"/>
+
+  <!-- Eye almond shape -->
+  <path d="M 215,228 Q 232,212 250,210 Q 268,212 285,228 Q 268,244 250,246 Q 232,244 215,228 Z"
+    fill="none" stroke="#C9A84C" stroke-width="2"
+    stroke-linejoin="round" filter="url(#gGlow)"/>
+
+  <!-- Iris ring -->
+  <circle cx="250" cy="228" r="11" fill="none"
+    stroke="#C9A84C" stroke-width="2"/>
+
+  <!-- Pupil -->
+  <circle cx="250" cy="228" r="5.5" fill="#C9A84C" opacity="0.95"/>
+
+  <!-- Eye shine -->
+  <circle cx="255" cy="223" r="2.8" fill="#F8E89A" opacity="0.9"/>
+
+  <!-- ─── TEXT SECTION ─── -->
+
+  <!-- CRYPTO LWA — main title -->
+  <text
+    x="250" y="428"
+    font-family="'Georgia', 'Times New Roman', 'Palatino', serif"
+    font-size="52"
+    font-weight="700"
+    fill="#FFFFFF"
+    text-anchor="middle"
+    letter-spacing="5"
+    filter="url(#tGlow)">CRYPTO LWA</text>
+
+  <!-- CRYPTO INTELLIGENCE — subtitle -->
+  <text
+    x="250" y="454"
+    font-family="'Arial', 'Helvetica', sans-serif"
+    font-size="13.5"
+    font-weight="400"
+    fill="#CC55FF"
+    text-anchor="middle"
+    letter-spacing="5"
+    filter="url(#tGlowPurple)">CRYPTO INTELLIGENCE</text>
+
+  <!-- ✦ NOT FINANCIAL ADVICE — DYOR ✦ -->
+  <text
+    x="250" y="476"
+    font-family="'Arial', 'Helvetica', sans-serif"
+    font-size="9.5"
+    fill="#C9A84C"
+    text-anchor="middle"
+    letter-spacing="2.5"
+    opacity="0.88">&#10022; NOT FINANCIAL ADVICE &#8212; DYOR &#10022;</text>
+
+</svg>

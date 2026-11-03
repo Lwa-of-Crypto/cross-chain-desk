@@ -1,0 +1,23 @@
+{
+  "name": "near-intents-desk",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "description": "A non-custodial cross-chain swap desk on NEAR Intents (1Click), with the checks a router should not be trusted to do for you.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "bundle:test": "esbuild test/entry.ts --bundle --format=esm --platform=neutral --outfile=test/.build/sys.mjs && esbuild src/lib/intents.ts --bundle --format=esm --platform=neutral --outfile=test/.build/lib.mjs",
+    "test": "npm run bundle:test && node test/run-all.mjs"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261023.1",
+    "acorn": "8.14.0",
+    "esbuild": "0.25.11",
+    "playwright": "1.61.1",
+    "typescript": "5.9.3",
+    "wrangler": "4.156.0"
+  }
+}

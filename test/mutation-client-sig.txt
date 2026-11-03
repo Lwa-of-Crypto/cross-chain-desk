@@ -1,0 +1,7 @@
+baseline: all 8 suites pass on unmodified copies served through the hook
+
+  killed   HOOK SANITY — client throws on load  (mobile7)
+  killed   proof: "Check signature" treats any answer as valid  (mobile7)
+
+2/2 client mutants killed
+exit=0
