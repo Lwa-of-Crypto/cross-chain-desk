@@ -109,6 +109,7 @@ img{max-width:100%;height:auto;}
 .xc-confirm input{margin-top:3px;flex:none;width:18px;height:18px;accent-color:var(--gold);}
 .xc-btn{background:linear-gradient(180deg,var(--gold-bright),var(--gold));color:#150B05;border:1px solid var(--gold);border-radius:2px;
   padding:11px 20px;font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;min-height:44px;}
+a.xc-btn{display:inline-flex;align-items:center;text-decoration:none;}
 .xc-btn:hover:not(:disabled){box-shadow:0 0 18px rgba(233,200,119,.3);}
 .xc-btn:disabled{opacity:.4;cursor:not-allowed;}
 .xc-btn.ghost{background:transparent;color:var(--gold-bright);border:1px solid var(--line);font-weight:400;letter-spacing:1.4px;}

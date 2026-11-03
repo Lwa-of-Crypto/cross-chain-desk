@@ -72,11 +72,35 @@ async function connect(page) { await tapText(page, /^Connect /); await page.wait
 async function run(eng, bt, device) {
   console.log(`\n[${eng}: ${device} on ${bt.name()}]`)
 
-  // ── C1 no wallet in this browser: says so, offers no button
+  // ── C1 a phone browser with no wallet: links that open this page in the wallet app, nothing else
   {
     const { browser, page } = await open(bt, device, { wallets: [] })
     const n = await page.$$eval('#xc-connect button', bs => bs.length)
-    t(eng, 'no wallet: "No browser wallet found", no connect button', /No browser wallet found/.test(await box(page)) && n === 0, await box(page))
+    const links = await page.$$eval('#xc-connect a', as => as.map(a => ({ text: a.textContent, href: a.getAttribute('href'), rel: a.rel, h: a.getBoundingClientRect().height })))
+    const host = new URL(URL0).host
+    t(eng, 'no wallet on a phone: no connect button', n === 0, n)
+    t(eng, '…"Open in MetaMask" = MetaMask\'s documented link to this page only',
+      links.some(l => l.text === 'Open in MetaMask' && l.href === 'https://link.metamask.io/dapp/' + host + '/'), J(links))
+    t(eng, '…"Open in Base app" = Coinbase Wallet\'s documented link to this page only',
+      links.some(l => l.text === 'Open in Base app' && l.href === 'https://go.cb-w.com/dapp?cb_url=' + encodeURIComponent('https://' + host + '/')), J(links))
+    t(eng, '…exactly those two links, each noopener noreferrer, each a 44 px tap target',
+      links.length === 2 && links.every(l => /noopener/.test(l.rel) && /noreferrer/.test(l.rel) && l.h >= 44), J(links))
+    t(eng, '…and it says to start the swap there (a swap stays in the browser it was made in)', /start your swap there/.test(await box(page)), await box(page))
+    const ov = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
+    t(eng, '…with no sideways scroll on the phone', ov <= 0, ov)
+    // Once a swap's card replaces the form, leaving for the wallet app would strand the swap here.
+    await page.evaluate(() => { document.getElementById('xc-form').hidden = true })
+    await page.dispatchEvent('#xc-to-chain', 'change'); await page.waitForTimeout(150)
+    const after = await page.$$eval('#xc-connect a', as => as.length)
+    t(eng, 'no "Open in…" links once the form is replaced by a swap card', after === 0, await box(page))
+    await browser.close()
+  }
+
+  // ── C1b a desktop browser with no wallet: the plain message, no app links
+  {
+    const { browser, page } = await open(bt, bt === webkit ? 'Desktop Safari' : 'Desktop Chrome', { wallets: [] })
+    const nl = await page.$$eval('#xc-connect a', as => as.length)
+    t(eng, 'no wallet on a computer: "No browser wallet found", no app links', /No browser wallet found/.test(await box(page)) && nl === 0, await box(page))
     await browser.close()
   }
 
@@ -84,6 +108,7 @@ async function run(eng, bt, device) {
   {
     const { browser, page } = await open(bt, device)
     t(eng, 'the button names the wallet ("Connect Test Wallet")', (await btnByText(page, /^Connect Test Wallet$/)) >= 0, await box(page))
+    t(eng, 'inside a wallet app (a wallet is found) no "Open in…" links are shown', (await page.$$eval('#xc-connect a', as => as.length)) === 0)
     t(eng, 'the page asked the wallet NOTHING before Connect was pressed', (await calls(page)).length === 0, J(await calls(page)))
     const h = await page.$eval('#xc-connect button', b => b.getBoundingClientRect().height)
     t(eng, 'the Connect button is a 44 px tap target', h >= 44, h)

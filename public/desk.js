@@ -234,7 +234,9 @@
     // hidden until fresh terms render, so a box cannot be ticked against the wrong swap.
     el.confirm.hidden = true; updateGo();
   }
-  function setFormLocked(locked) { el.form.querySelectorAll('input,select,button').forEach(function (i) { if (i !== abandonBtn) i.disabled = locked; }); }   // 'Start over' is the way OUT of a lock
+  // 'Start over' is the way OUT of a lock. The connect box is redrawn too: its "Open in…" links
+  // cannot be disabled like buttons, so they are taken away while a request is in flight or in doubt.
+  function setFormLocked(locked) { el.form.querySelectorAll('input,select,button').forEach(function (i) { if (i !== abandonBtn) i.disabled = locked; }); renderConnect(); }
   function schedulePreview() {
     // While a deposit request is in flight, or its outcome is in doubt, the key must
     // survive (QA re-audit): edits wait until the answer is in.
@@ -509,7 +511,7 @@
     clearTimeout(S.refreshTimer); clearTimeout(S.timer); S.previewSeq++;
     // Drop the accepted terms: nothing on screen may be able to request another address for them.
     invalidateTerms();
-    el.form.hidden = true; el.confirm.hidden = true; clear(el.preview);
+    el.form.hidden = true; el.confirm.hidden = true; clear(el.preview); renderConnect();
     renderSwap(sw, terms);
     poll(!fresh);
   }
@@ -754,6 +756,20 @@
     CONN = null; CONN_MSG = { text: 'Forgotten by this page. The addresses below were not changed.', cls: '' };
     renderConnect(); if (S.walletRefill) S.walletRefill();
   }
+  // iPadOS reports itself as a Mac: a Mac with a touch screen is an iPad.
+  function isPhone() {
+    var ua = navigator.userAgent || '';
+    return /Android|iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  }
+  // Formats from the wallets' own docs: MetaMask link.metamask.io/dapp/<page>; Coinbase Wallet
+  // (now the Base app) go.cb-w.com/dapp?cb_url=<page, percent-encoded>.
+  function appLinks() {
+    var page = location.host + '/';
+    return [
+      { text: 'Open in MetaMask', href: 'https://link.metamask.io/dapp/' + page },
+      { text: 'Open in Base app', href: 'https://go.cb-w.com/dapp?cb_url=' + encodeURIComponent('https://' + page) },
+    ];
+  }
   function renderConnect() {
     var box = $('xc-connect');
     if (!box || !S.chains.length) return;      // drawn once the token list is in (boot)
@@ -776,6 +792,15 @@
       if (ws.length) {
         ws.forEach(function (w) { var b = btn(CONNECTING ? 'Waiting for your wallet…' : 'Connect ' + w.name, 'xc-btn', function () { connectWallet(w); }); if (CONNECTING) b.disabled = true; });
         box.appendChild(h('p', 'k', 'Optional. Shares your address only: no signature, no approval. Or paste your addresses below.'));
+      } else if (isPhone() && !locked) {
+        // A phone browser has no wallet inside it: offer the wallet apps' own documented links that
+        // open this page in their built-in browser, where Connect works. The link carries this page's
+        // address only (never a swap id, key or address), so it is offered on the form, before a
+        // swap exists: a swap stays in the browser it was made in.
+        appLinks().forEach(function (l) {
+          var a = h('a', 'xc-btn ghost', l.text); a.href = l.href; a.rel = 'noopener noreferrer'; acts.appendChild(a);
+        });
+        box.appendChild(h('p', 'k', 'On a phone, open this page in your wallet app to connect it, then start your swap there: each swap stays in the browser it was made in. Or paste your addresses below.'));
       } else box.appendChild(h('p', 'k', 'No browser wallet found. Paste your addresses below, or open this page in your wallet app’s browser to connect it.'));
     }
     if (acts.childNodes.length) box.insertBefore(acts, box.firstChild);
