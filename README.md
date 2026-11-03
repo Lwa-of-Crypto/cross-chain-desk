@@ -1,4 +1,6 @@
-# CryptoLwa Cross-Chain Desk
+# Kalfou Swap — Cross-Chain Desk
+
+By CryptoLwa. Kalfou is the Lwa of the crossroads: a swap is where two chains meet.
 
 A non-custodial cross-chain swap desk on **NEAR Intents (1Click)**. Swap between Bitcoin,
 Solana, NEAR, Tron, Dogecoin, Litecoin and eight EVM chains from any wallet: send to a deposit

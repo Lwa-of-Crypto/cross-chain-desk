@@ -1,5 +1,5 @@
 /* ============================================================
-   CRYPTOLWA · cross-chain desk (NEAR Intents 1Click) — standalone page
+   CRYPTOLWA · Kalfou Swap — Cross-Chain Desk (NEAR Intents 1Click) — standalone page
    ------------------------------------------------------------
    Talks ONLY to its own /api/* (same origin; CSP connect-src 'self').
    No wallet SDK, no approvals, no account: the user sends from any wallet
@@ -663,7 +663,7 @@
       // The access key is NOT in the receipt: a receipt gets shared (support, disputes), the key should not.
       // Nor is any date or this device's clock: fields starting with "_" are this page's own.
       var rec = {}; Object.keys(sw).forEach(function (k) { if (k.charAt(0) !== '_') rec[k] = sw[k]; });
-      return JSON.stringify({ desk: 'CryptoLwa cross-chain desk (NEAR Intents 1Click)', support: SUPPORT, swap: rec }, null, 2);
+      return JSON.stringify({ desk: 'Kalfou Swap — Cross-Chain Desk by CryptoLwa (NEAR Intents 1Click)', support: SUPPORT, swap: rec }, null, 2);
     }
     var rec = h('button', 'xc-btn ghost', 'Download receipt'); rec.type = 'button';
     rec.addEventListener('click', function () {
