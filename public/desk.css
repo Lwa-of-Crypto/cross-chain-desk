@@ -42,7 +42,11 @@ img{max-width:100%;height:auto;}
 .brand .sub{display:none;}
 
 /* ── hero ──────────────────────────────────────────────────────────── */
-.hero{max-width:1180px;margin:0 auto;padding:26px 20px 6px;}
+.hero{position:relative;max-width:1180px;margin:0 auto;padding:26px 20px 6px;}
+/* Kalfou's veve, the crossroads: beside the hero on wide screens, beside the headline on narrow ones. */
+.hero-veve{position:absolute;top:18px;right:40px;width:210px;height:auto;pointer-events:none;
+  filter:drop-shadow(0 0 14px rgba(233,200,119,.28));}
+@media (max-width:1000px){.hero-veve{position:static;float:right;width:88px;margin:0 0 6px 12px;}}
 .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:2.4px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:10px;}
 .hero h1{font-family:var(--display);font-weight:700;font-size:clamp(24px,4.4vw,38px);line-height:1.15;color:var(--text-hi);letter-spacing:.5px;}
 .hero h1 .g{color:var(--gold-bright);}
@@ -71,7 +75,8 @@ img{max-width:100%;height:auto;}
 .xc-pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor;}
 .xc-pill.green{color:var(--green);border-color:rgba(79,209,139,.45);background:rgba(79,209,139,.06);}
 .xc-pill.amber{color:var(--amber);border-color:rgba(240,180,76,.45);background:rgba(240,180,76,.06);}
-.xc-body{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:20px;padding:20px;}
+.xc-body{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:20px;padding:20px;
+  background:url(/kalfou-veve-faint.png) center/min(440px,80%) no-repeat;}
 @media (max-width:1000px){.xc-body{grid-template-columns:1fr;}}
 .xc-grid{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:end;}
 @media (max-width:640px){.xc-grid{grid-template-columns:1fr;}.xc-dir{justify-self:center;transform:rotate(90deg);}}

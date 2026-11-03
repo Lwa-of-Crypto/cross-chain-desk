@@ -97,6 +97,9 @@ Without sending money, `npm test` runs every Node suite (see "Test it" below).
     cryptolwa.io's colours and fonts.
   - `ctEq` in `src/identity.ts`: the same four-line constant-time string comparison is used in
     earlier cryptolwa.io code.
+- **Artwork:** `public/kalfou-veve.png` and its faint copy `public/kalfou-veve-faint.png` show Kalfou's
+  veve (the crossroads), a traditional sacred symbol of the Lwa: public and owned by no one, so not
+  covered by this repository's license. Colored for the page.
 - **License:** MIT (`LICENSE`) for this desk's own code. The files listed above keep their own licenses.
   The CryptoLwa name and logo are not licensed for reuse.
 - **Build and test tools** (dev only, not shipped): wrangler, esbuild, TypeScript, acorn,

@@ -181,6 +181,14 @@
       return false;
     });
   }
+  // The ticker a chain change carries over. A chain's own coin does not follow: on another chain the
+  // same ticker is a bridged or look-alike copy (1Click's NEAR list holds a "SOL" that is not Solana's).
+  function carried(sel) {
+    var o = sel.selectedOptions[0];
+    if (!o) return null;
+    var t = S.tokens.filter(function (x) { return x.id === sel.value; })[0];
+    return t && MAIN_COIN[t.chain] === o.textContent ? null : o.textContent;
+  }
   // Addresses are NOT remembered (red-team round 2): a stored address can be
   // planted by any script that ever runs on the origin and then pre-filled as
   // the user's own receiving address.
@@ -1190,8 +1198,8 @@
 
   // ── boot ──────────────────────────────────────────────────────────────
   function wire() {
-    el.fromChain.addEventListener('change', function () { fillTokens(el.fromTok, el.fromChain.value, el.fromTok.selectedOptions[0] && el.fromTok.selectedOptions[0].textContent); el.refund.value = ''; syncLabels(); schedulePreview(); });
-    el.toChain.addEventListener('change', function () { fillTokens(el.toTok, el.toChain.value, el.toTok.selectedOptions[0] && el.toTok.selectedOptions[0].textContent); el.recipient.value = ''; syncLabels(); schedulePreview(); });
+    el.fromChain.addEventListener('change', function () { fillTokens(el.fromTok, el.fromChain.value, carried(el.fromTok)); el.refund.value = ''; syncLabels(); schedulePreview(); });
+    el.toChain.addEventListener('change', function () { fillTokens(el.toTok, el.toChain.value, carried(el.toTok)); el.recipient.value = ''; syncLabels(); schedulePreview(); });
     [el.fromTok, el.toTok, el.slip].forEach(function (i) { i.addEventListener('change', schedulePreview); });
     [el.amount, el.recipient, el.refund].forEach(function (i) { i.addEventListener('input', schedulePreview); });
     [el.ack1, el.ack2].forEach(function (i) { i.addEventListener('change', updateGo); });
